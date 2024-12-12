@@ -38,6 +38,7 @@ public class Principal {
                     3 - Listar autores registrados
                     4 - Listar autores vivos en un año especifico
                     5 - Listar libros por idiomas
+                    6 - Top 10 libros mas descargados
                     
                     0 - Salir
                     """;
@@ -64,10 +65,13 @@ public class Principal {
                     findAuthors();
                     break;
                 case 4:
-                    //findSerieByTitle();
+                    findAuthorsAlive();
                     break;
                 case 5:
                     findByLanguage();
+                    break;
+                case 6:
+                    findBookDownload();
                     break;
 
                 case 0:
@@ -80,9 +84,7 @@ public class Principal {
         }
     }
 
-    private DatosBook getDatosBook() {
-        System.out.println("Ingrese el titulo a buscar");
-        String libro = sc.nextLine();
+    private DatosBook getDatosBook(String libro) {
 
         // Get info about Book
         String bookEncode = null;
@@ -94,27 +96,47 @@ public class Principal {
 
         String json = consumoAPI.obtenerDatos(URL_BASE + bookEncode);
 
-        var datosSerie = conversor.obtenerDatos(json, DatosResponse.class);
+        var datosBook = conversor.obtenerDatos(json, DatosResponse.class);
 
-        return datosSerie.results().stream()
+        return datosBook.results().stream()
                 .filter(d -> d.title().toUpperCase().contains(libro.toUpperCase()))
                 .findFirst()
                 .orElse(null);
     }
 
     private void searchBook() {
-        DatosBook datos = getDatosBook();
+        System.out.println("Ingrese el titulo a buscar");
+        String libro = sc.nextLine();
 
-        if (datos != null){
-            Book book = new Book(datos);
-            repository.save(book);
+        Book existsBook = existBook(libro);
 
-            saveAuthor(book.getTitle(), datos);
+        if (existsBook != null){
+
+            System.out.println("Libro existente " + libro);
+            //TODO: Improve mssg exist book
+            System.out.println(existsBook.getTitle());
 
         }else {
-            System.out.println("Libro no encontrado");
+
+            DatosBook datos = getDatosBook(libro);
+
+            if (datos != null){
+
+                Book book = new Book(datos);
+                repository.save(book);
+
+                saveAuthor(book.getTitle(), datos);
+
+            }else {
+                System.out.println("Libro no encontrado");
+            }
         }
 
+
+    }
+
+    private Book existBook(String book){
+        return repository.findByTitleIgnoreCase(book);
     }
 
     private void saveAuthor(String book, DatosBook datos){
@@ -223,16 +245,45 @@ public class Principal {
 
         if (!authors.isEmpty()){
 
-            System.out.println("Autores registrados");
+            System.out.println("Autores registrados \n");
             authors.stream()
                     .forEach(System.out::println);
         }else {
-            System.out.println("No hay autores registrados");
+            System.out.println("No hay autores registrados \n");
+        }
+    }
+
+    private void findAuthorsAlive(){
+        System.out.println("Ingrese el año especifico para buscar autores vivos");
+        Integer year = sc.nextInt();
+
+        List<Author> authors = repository.findAuthorsAlive(year);
+
+        if (!authors.isEmpty()){
+
+            System.out.println("Autores con vida en " + year + " : \n");
+            authors.stream()
+                    .forEach(System.out::println);
+
+        }else{
+            System.out.println("No se encontraron autores vivos \n");
+        }
+    }
+
+    private void findBookDownload(){
+        int counter = 1;
+        List<Book> books = repository.findBookdownload();
+
+        System.out.println("Top 10 Libros mas descargados \n");
+
+        for (int i = 0; i<books.size(); i++){
+            System.out.println(counter + ". Libro " + books.get(i).getTitle() + " - Descargas " + books.get(i).getDownloads() + "\n");
+            counter++;
         }
     }
 
     private void mssgLanguage(String lang, List<Book> books){
-        System.out.println("Libros en " + lang);
+        System.out.println("Libros en " + lang + "\n");
         books.stream()
                 .forEach(System.out::println);
     }

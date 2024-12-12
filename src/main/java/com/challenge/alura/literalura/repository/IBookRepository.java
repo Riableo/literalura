@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface IBookRepository extends JpaRepository<Book, Long> {
+
     Book findByTitle(String book);
+
+    Book findByTitleIgnoreCase(String book);
 
     @Query("SELECT b FROM Book b JOIN FETCH b.authors")
     List<Book> findAll();
@@ -21,4 +24,10 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.nameAuthor = :nameAuthor")
     List<Author> findAuthor(String nameAuthor);
+
+    @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.birthDate <= :year AND a.deceaseDate >= :year")
+    List<Author> findAuthorsAlive(Integer year);
+
+    @Query("SELECT b FROM Book b JOIN FETCH b.authors a ORDER BY b.downloads DESC LIMIT 10")
+    List<Book> findBookdownload();
 }
