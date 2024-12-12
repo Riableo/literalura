@@ -18,4 +18,7 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b")
     List<Author> findAuthors();
+
+    @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.nameAuthor = :nameAuthor")
+    List<Author> findAuthor(String nameAuthor);
 }

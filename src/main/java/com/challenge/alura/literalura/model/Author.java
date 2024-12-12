@@ -2,7 +2,6 @@ package com.challenge.alura.literalura.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity

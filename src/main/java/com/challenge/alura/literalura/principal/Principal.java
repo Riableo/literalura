@@ -118,17 +118,30 @@ public class Principal {
     }
 
     private void saveAuthor(String book, DatosBook datos){
+        List<Author> author;
         Book findBook = repository.findByTitle(book);
 
         if (findBook != null){
 
-            List<Author> author = datos.authors().stream()
-                    .map(Author::new)
-                    .collect(Collectors.toList());
+            List<Author> authorExist = findAuthor(datos.authors().get(0).nameAuthor());
 
-            findBook.setAuthor(author);
-            repository.save(findBook);
+            if (authorExist.isEmpty()){
+
+                author = datos.authors().stream()
+                        .map(Author::new)
+                        .collect(Collectors.toList());
+
+                findBook.setAuthor(author);
+                repository.save(findBook);
+            }else {
+                findBook.setAuthor(authorExist);
+                repository.save(findBook);
+            }
         }
+    }
+
+    private List<Author> findAuthor(String nameAuthor){
+        return repository.findAuthor(nameAuthor);
     }
 
     private void findBooks(){
