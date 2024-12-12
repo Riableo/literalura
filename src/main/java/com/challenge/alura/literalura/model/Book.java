@@ -2,6 +2,8 @@ package com.challenge.alura.literalura.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "books")
 public class Book {
@@ -10,18 +12,22 @@ public class Book {
     private Long id;
     @Column(unique = true)
     private String title;
-    @ManyToOne
-    private Author author;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "authorBook",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
     private String language;
     private int downloads;
 
     public Book(){}
 
-    public Book(String title, Author author, String language, int downloads) {
-        this.title = title;
-        this.author = author;
-        this.language = language;
-        this.downloads = downloads;
+    public Book(DatosBook datosBook) {
+        this.title = datosBook.title();
+        this.language = datosBook.language().get(0);
+        this.downloads = datosBook.downloads();
     }
 
     public Long getId() {
@@ -40,12 +46,12 @@ public class Book {
         this.title = title;
     }
 
-    public Author getAuthor() {
-        return author;
+    public List<Author> getAuthor() {
+        return authors;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthor(List<Author> author) {
+        this.authors = author;
     }
 
     public String getLanguage() {
@@ -67,7 +73,7 @@ public class Book {
     @Override
     public String toString() {
         return " title='" + title + '\'' +
-                ", author='" + author + '\'' +
+                ", author='" + authors.get(0).getNameAuthor() + '\'' +
                 ", language='" + language + '\'' +
                 ", downloads=" + downloads;
     }

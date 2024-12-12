@@ -9,3 +9,7 @@ Project library with Springboot to read and insert data into database on Postgre
 - List authors on BD
 - List authors alive on specific year
 - List books by languages
+
+## Sources
+
+- [*Initializer exception:*](https://www.baeldung.com/hibernate-initialize-proxy-exception) With this I could resolve problem with load lazy using JPQL.

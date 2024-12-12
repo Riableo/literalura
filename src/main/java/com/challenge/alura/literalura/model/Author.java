@@ -11,24 +11,25 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Author nameAuthor;
+    private String nameAuthor;
     private Date birthDate;
     private Date deceaseDate;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     private List<Book> books;
 
-    public Author(Author nameAuthor, Date birthDate, Date deceaseDate, List<Book> books) {
-        this.nameAuthor = nameAuthor;
-        this.birthDate = birthDate;
-        this.deceaseDate = deceaseDate;
-        this.books = books;
+    public Author(){}
+
+    public Author(DatosAuthor datosAuthor) {
+        this.nameAuthor = datosAuthor.nameAuthor();
+        this.birthDate = datosAuthor.birthDate();
+        this.deceaseDate = datosAuthor.deceasingDate();
     }
 
-    public Author getNameAuthor() {
+    public String getNameAuthor() {
         return nameAuthor;
     }
 
-    public void setNameAuthor(Author nameAuthor) {
+    public void setNameAuthor(String nameAuthor) {
         this.nameAuthor = nameAuthor;
     }
 
