@@ -4,7 +4,6 @@ import com.challenge.alura.literalura.model.Author;
 import com.challenge.alura.literalura.model.Book;
 import com.challenge.alura.literalura.model.DatosBook;
 import com.challenge.alura.literalura.model.DatosResponse;
-import com.challenge.alura.literalura.repository.IAuthorRepository;
 import com.challenge.alura.literalura.repository.IBookRepository;
 import com.challenge.alura.literalura.service.ConsumoAPI;
 import com.challenge.alura.literalura.service.ConvierteDatos;
@@ -21,14 +20,12 @@ public class Principal {
     private static final String URL_BASE = "https://gutendex.com/books/?search=";
 
     private IBookRepository repository;
-    private IAuthorRepository repoAuthor;
     private Scanner sc = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos conversor = new ConvierteDatos();
 
-    public Principal(IBookRepository repository, IAuthorRepository repoAuthor) {
+    public Principal(IBookRepository repository) {
         this.repository = repository;
-        this.repoAuthor = repoAuthor;
     }
 
     public void showMenu(){
@@ -209,7 +206,6 @@ public class Principal {
     }
 
     private void findAuthors(){
-        //List<Author> authors = repoAuthor.findAllAuthors();
         List<Author> authors = repository.findAuthors();
 
         if (!authors.isEmpty()){

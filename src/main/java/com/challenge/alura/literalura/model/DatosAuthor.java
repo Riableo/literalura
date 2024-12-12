@@ -8,7 +8,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record DatosAuthor(
         @JsonAlias("name") String nameAuthor,
-        @JsonAlias("birth_year") Date birthDate,
-        @JsonAlias("death_year") Date deceasingDate
+        @JsonAlias("birth_year") Integer birthDate,
+        @JsonAlias("death_year") Integer deceasingDate
 ) {
 }

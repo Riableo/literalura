@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "author")
@@ -13,8 +12,8 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nameAuthor;
-    private Date birthDate;
-    private Date deceaseDate;
+    private Integer birthDate;
+    private Integer deceaseDate;
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     private List<Book> books;
 
@@ -34,19 +33,19 @@ public class Author {
         this.nameAuthor = nameAuthor;
     }
 
-    public Date getBirthDate() {
+    public Integer getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(Integer birthDate) {
         this.birthDate = birthDate;
     }
 
-    public Date getDeceaseDate() {
+    public Integer getDeceaseDate() {
         return deceaseDate;
     }
 
-    public void setDeceaseDate(Date deceaseDate) {
+    public void setDeceaseDate(Integer deceaseDate) {
         this.deceaseDate = deceaseDate;
     }
 
