@@ -4,6 +4,7 @@ import com.challenge.alura.literalura.model.Author;
 import com.challenge.alura.literalura.model.Book;
 import com.challenge.alura.literalura.model.DatosBook;
 import com.challenge.alura.literalura.model.DatosResponse;
+import com.challenge.alura.literalura.repository.IAuthorRepository;
 import com.challenge.alura.literalura.repository.IBookRepository;
 import com.challenge.alura.literalura.service.ConsumoAPI;
 import com.challenge.alura.literalura.service.ConvierteDatos;
@@ -20,12 +21,14 @@ public class Principal {
     private static final String URL_BASE = "https://gutendex.com/books/?search=";
 
     private IBookRepository repository;
+    private IAuthorRepository repoAuthor;
     private Scanner sc = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos conversor = new ConvierteDatos();
 
-    public Principal(IBookRepository repository) {
+    public Principal(IBookRepository repository, IAuthorRepository repoAuthor) {
         this.repository = repository;
+        this.repoAuthor = repoAuthor;
     }
 
     public void showMenu(){
@@ -61,7 +64,7 @@ public class Principal {
                     findBooks();
                     break;
                 case 3:
-                    //showSeries();
+                    findAuthors();
                     break;
                 case 4:
                     //findSerieByTitle();
@@ -203,6 +206,18 @@ public class Principal {
             }
         }
 
+    }
+
+    private void findAuthors(){
+        List<Author> authors = repoAuthor.findAllAuthors();
+
+        if (!authors.isEmpty()){
+
+            System.out.println("Autores registrados");
+            System.out.println(authors);
+        }else {
+            System.out.println("No hay autores registrados");
+        }
     }
 
     private void mssgLanguage(String lang, List<Book> books){
