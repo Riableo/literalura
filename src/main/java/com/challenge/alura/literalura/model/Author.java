@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "author")
@@ -62,6 +63,6 @@ public class Author {
         return " nameAuthor=" + nameAuthor +
                 ", birthDate=" + birthDate +
                 ", deceaseDate=" + deceaseDate +
-                ", books=" + books;
+                ", books=" + books.stream().map(Book::getTitle).toList();
     }
 }

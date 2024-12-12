@@ -209,12 +209,14 @@ public class Principal {
     }
 
     private void findAuthors(){
-        List<Author> authors = repoAuthor.findAllAuthors();
+        //List<Author> authors = repoAuthor.findAllAuthors();
+        List<Author> authors = repository.findAuthors();
 
         if (!authors.isEmpty()){
 
             System.out.println("Autores registrados");
-            System.out.println(authors);
+            authors.stream()
+                    .forEach(System.out::println);
         }else {
             System.out.println("No hay autores registrados");
         }
