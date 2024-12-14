@@ -108,13 +108,19 @@ public class Principal {
         System.out.println("Ingrese el titulo a buscar");
         String libro = sc.nextLine();
 
-        Book existsBook = existBook(libro);
+        Book existsBook = existBook(libro.toUpperCase());
 
         if (existsBook != null){
 
             System.out.println("Libro existente " + libro);
-            //TODO: Improve mssg exist book
-            System.out.println(existsBook.getTitle());
+            System.out.printf("""
+                    ********    ********
+                    * Author: %s       *
+                    * Book: %s         *
+                    * Language: %s     *
+                    * Downloads: %s    *
+                    ********************
+                    """, existsBook.getAuthor().get(0).getNameAuthor(), existsBook.getTitle(), existsBook.getLanguage(), existsBook.getDownloads());
 
         }else {
 
@@ -136,7 +142,7 @@ public class Principal {
     }
 
     private Book existBook(String book){
-        return repository.findByTitleIgnoreCase(book);
+        return repository.findExistBook(book);
     }
 
     private void saveAuthor(String book, DatosBook datos){

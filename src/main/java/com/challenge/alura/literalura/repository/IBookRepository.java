@@ -11,7 +11,8 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     Book findByTitle(String book);
 
-    Book findByTitleIgnoreCase(String book);
+    @Query("SELECT b FROM Book b JOIN FETCH b.authors WHERE UPPER(b.title) = :book")
+    Book findExistBook(String book);
 
     @Query("SELECT b FROM Book b JOIN FETCH b.authors")
     List<Book> findAll();
