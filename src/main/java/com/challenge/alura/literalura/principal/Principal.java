@@ -10,8 +10,10 @@ import com.challenge.alura.literalura.service.ConvierteDatos;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -19,10 +21,10 @@ public class Principal {
 
     private static final String URL_BASE = "https://gutendex.com/books/?search=";
 
-    private IBookRepository repository;
-    private Scanner sc = new Scanner(System.in);
-    private ConsumoAPI consumoAPI = new ConsumoAPI();
-    private ConvierteDatos conversor = new ConvierteDatos();
+    private final IBookRepository repository;
+    private final Scanner sc = new Scanner(System.in);
+    private final ConsumoAPI consumoAPI = new ConsumoAPI();
+    private final ConvierteDatos conversor = new ConvierteDatos();
 
     public Principal(IBookRepository repository) {
         this.repository = repository;
@@ -39,6 +41,7 @@ public class Principal {
                     4 - Listar autores vivos en un año especifico
                     5 - Listar libros por idiomas
                     6 - Top 10 libros mas descargados
+                    7 - Buscar autor por nombre
                     
                     0 - Salir
                     """;
@@ -50,6 +53,7 @@ public class Principal {
 
             }catch(InputMismatchException e){
                 System.out.println("ERROR: DataType " + e + " Tipo de dato no es el permitido ingrese un número");
+                opcion = -1;
             }
 
             sc.nextLine();
@@ -73,6 +77,9 @@ public class Principal {
                 case 6:
                     findBookDownload();
                     break;
+                case 7:
+                    findByAuthorName();
+                    break;
 
                 case 0:
                     System.out.println("Cerrando aplicacion....");
@@ -87,12 +94,8 @@ public class Principal {
     private DatosBook getDatosBook(String libro) {
 
         // Get info about Book
-        String bookEncode = null;
-        try {
-            bookEncode = URLEncoder.encode(libro, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("ERROR: No codificable " + e);
-        }
+        String bookEncode;
+        bookEncode = URLEncoder.encode(libro, StandardCharsets.UTF_8);
 
         String json = consumoAPI.obtenerDatos(URL_BASE + bookEncode);
 
@@ -175,8 +178,7 @@ public class Principal {
     private void findBooks(){
         List<Book> books = repository.findAll();
 
-        books.stream()
-                .forEach(System.out::println);
+        books.forEach(System.out::println);
     }
 
     private void findByLanguage(){
@@ -198,7 +200,7 @@ public class Principal {
             try {
                 lang = sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("ERROR: DataType " + e + " Tipo de dato ingresado no compatible ingrese un número");;
+                System.out.println("ERROR: DataType " + e + " Tipo de dato ingresado no compatible ingrese un número");
             }
             sc.nextLine();
 
@@ -252,8 +254,7 @@ public class Principal {
         if (!authors.isEmpty()){
 
             System.out.println("Autores registrados \n");
-            authors.stream()
-                    .forEach(System.out::println);
+            authors.forEach(System.out::println);
         }else {
             System.out.println("No hay autores registrados \n");
         }
@@ -268,8 +269,7 @@ public class Principal {
         if (!authors.isEmpty()){
 
             System.out.println("Autores con vida en " + year + " : \n");
-            authors.stream()
-                    .forEach(System.out::println);
+            authors.forEach(System.out::println);
 
         }else{
             System.out.println("No se encontraron autores vivos \n");
@@ -282,15 +282,27 @@ public class Principal {
 
         System.out.println("Top 10 Libros mas descargados \n");
 
-        for (int i = 0; i<books.size(); i++){
-            System.out.println(counter + ". Libro " + books.get(i).getTitle() + " - Descargas " + books.get(i).getDownloads() + "\n");
+        for (Book book : books) {
+            System.out.println(counter + ". Libro " + book.getTitle() + " - Descargas " + book.getDownloads() + "\n");
             counter++;
+        }
+    }
+
+    private void findByAuthorName(){
+        System.out.println("Ingrese nombre de autor");
+        String nameAuthor = sc.nextLine();
+
+        Optional<Author> authors = repository.findAuthorByName(nameAuthor);
+
+        if (authors.isPresent()){
+            authors.ifPresent(System.out::println);
+        }else {
+            System.out.println("No se ha encontrado ningún autor con el nombre: " + nameAuthor);
         }
     }
 
     private void mssgLanguage(String lang, List<Book> books){
         System.out.println("Libros en " + lang + "\n");
-        books.stream()
-                .forEach(System.out::println);
+        books.forEach(System.out::println);
     }
 }

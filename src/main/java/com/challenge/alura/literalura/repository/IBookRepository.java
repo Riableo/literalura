@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IBookRepository extends JpaRepository<Book, Long> {
 
@@ -31,4 +32,7 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b JOIN FETCH b.authors a ORDER BY b.downloads DESC LIMIT 10")
     List<Book> findBookdownload();
+
+    @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.nameAuthor LIKE %:nameAuthor%")
+    Optional<Author> findAuthorByName(String nameAuthor);
 }

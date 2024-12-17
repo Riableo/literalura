@@ -9,6 +9,8 @@ Project library with Springboot to read and insert data into database on Postgre
 - List authors on BD
 - List authors alive on specific year
 - List books by languages
+- Top 10 most download books
+- Search by author name
 
 ## Sources
 
