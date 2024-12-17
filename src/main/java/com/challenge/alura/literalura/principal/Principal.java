@@ -10,10 +10,7 @@ import com.challenge.alura.literalura.service.ConvierteDatos;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -41,6 +38,7 @@ public class Principal {
                     5 - Listar libros por idiomas
                     6 - Top 10 libros mas descargados
                     7 - Buscar autor por nombre
+                    8 - Mas descargados
                     
                     0 - Salir
                     """;
@@ -78,6 +76,9 @@ public class Principal {
                     break;
                 case 7:
                     findByAuthorName();
+                    break;
+                case 8:
+                    statsBook();
                     break;
 
                 case 0:
@@ -299,6 +300,25 @@ public class Principal {
             System.out.println("No se ha encontrado ningún autor con el nombre: " + nameAuthor);
         }
     }
+
+    private void statsBook(){
+        List<Book> book = repository.findAll();
+        DoubleSummaryStatistics statsBook = book.stream()
+                .filter(e -> e.getDownloads() > 0)
+                .collect(Collectors.summarizingDouble(Book::getDownloads));
+
+        System.out.println("Datos libros descargados");
+        System.out.printf("""
+                ******** Descargas *********
+                ** Datos: %d               *
+                ** Total descargas: %s     *
+                ** Minimo: %s              *
+                ** Promedio: %s            *
+                ** Maximo: %s              *
+                ****************************
+                """, statsBook.getCount(), statsBook.getSum(), statsBook.getMin(), statsBook.getAverage(), statsBook.getMax());
+    }
+
 
     private void mssgLanguage(String lang, List<Book> books){
         System.out.println("Libros en " + lang + "\n");
