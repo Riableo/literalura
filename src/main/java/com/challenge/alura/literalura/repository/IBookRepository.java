@@ -35,4 +35,7 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.nameAuthor LIKE %:nameAuthor%")
     Optional<Author> findAuthorByName(String nameAuthor);
+
+    @Query("SELECT a FROM Author a LEFT JOIN FETCH a.books b WHERE a.nameAuthor LIKE :lastName%")
+    List<Author> findAuthorByLastname(String lastName);
 }

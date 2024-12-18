@@ -39,6 +39,7 @@ public class Principal {
                     6 - Top 10 libros mas descargados
                     7 - Buscar autor por nombre
                     8 - Mas descargados
+                    9 - Buscar autores por inicial de apellido
                     
                     0 - Salir
                     """;
@@ -79,6 +80,9 @@ public class Principal {
                     break;
                 case 8:
                     statsBook();
+                    break;
+                case 9:
+                    findAuthorByName();
                     break;
 
                 case 0:
@@ -319,6 +323,38 @@ public class Principal {
                 """, statsBook.getCount(), statsBook.getSum(), statsBook.getMin(), statsBook.getAverage(), statsBook.getMax());
     }
 
+    private void findAuthorByName() {
+        String lastName = "AZ";
+
+        while (lastName.length() > 1){
+            System.out.println("Ingrese letra de apellido a buscar");
+
+            try{
+
+                lastName = sc.nextLine().toUpperCase();
+                //TODO: Validation no numbers & modify while condition
+
+                if (lastName.length() == 1){
+
+                    List<Author> authors = repository.findAuthorByLastname(lastName);
+
+                    if (!authors.isEmpty()){
+                        System.out.println("******* AUTORES ********");
+                        authors.forEach(System.out::println);
+                    }else {
+                        System.out.println("Autores con la letra " + lastName + " no encontrados");
+                    }
+                }else {
+                    System.out.println("Ingrese una letra para buscar autores que inicien con esta");
+                }
+
+
+            }catch (InputMismatchException e){
+                System.out.println("ERROR: Datatype no aceptado " + e.getMessage());
+            }
+        }
+
+    }
 
     private void mssgLanguage(String lang, List<Book> books){
         System.out.println("Libros en " + lang + "\n");
