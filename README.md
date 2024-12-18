@@ -7,7 +7,7 @@
 
 Project library with Springboot to read and insert data into database on PostgreSQL, the application consuming API [GUTENDEX](https://gutendex.com).
 
-:round_pushpin: ## Functionalities :heavy_check_mark:
+## :round_pushpin: Functionalities :heavy_check_mark:
 
 - Search book
 - List books on BD
