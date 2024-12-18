@@ -1,5 +1,6 @@
 package com.challenge.alura.literalura.principal;
 
+import com.challenge.alura.literalura.functions.Regex;
 import com.challenge.alura.literalura.model.Author;
 import com.challenge.alura.literalura.model.Book;
 import com.challenge.alura.literalura.model.DatosBook;
@@ -21,6 +22,7 @@ public class Principal {
     private final Scanner sc = new Scanner(System.in);
     private final ConsumoAPI consumoAPI = new ConsumoAPI();
     private final ConvierteDatos conversor = new ConvierteDatos();
+    private final Regex reg = new Regex();
 
     public Principal(IBookRepository repository) {
         this.repository = repository;
@@ -324,29 +326,39 @@ public class Principal {
     }
 
     private void findAuthorByName() {
+        boolean isNumber = true;
         String lastName = "AZ";
 
-        while (lastName.length() > 1){
+        while (lastName.length() > 1 || isNumber){
             System.out.println("Ingrese letra de apellido a buscar");
 
             try{
 
                 lastName = sc.nextLine().toUpperCase();
-                //TODO: Validation no numbers & modify while condition
 
-                if (lastName.length() == 1){
+                // Validation of no numbers
+                isNumber = reg.matchingLetter(lastName);
 
-                    List<Author> authors = repository.findAuthorByLastname(lastName);
-
-                    if (!authors.isEmpty()){
-                        System.out.println("******* AUTORES ********");
-                        authors.forEach(System.out::println);
-                    }else {
-                        System.out.println("Autores con la letra " + lastName + " no encontrados");
-                    }
+                if (isNumber){
+                    System.out.println("Ingrese una letra para la busqueda");
                 }else {
-                    System.out.println("Ingrese una letra para buscar autores que inicien con esta");
+
+                    // Only accept a char
+                    if (lastName.length() == 1){
+
+                        List<Author> authors = repository.findAuthorByLastname(lastName);
+
+                        if (!authors.isEmpty()){
+                            System.out.println("******* AUTORES ********");
+                            authors.forEach(System.out::println);
+                        }else {
+                            System.out.println("Autores con la letra " + lastName + " no encontrados");
+                        }
+                    }else {
+                        System.out.println("Ingrese una letra para buscar autores que inicien con esta. e.j. A");
+                    }
                 }
+
 
 
             }catch (InputMismatchException e){

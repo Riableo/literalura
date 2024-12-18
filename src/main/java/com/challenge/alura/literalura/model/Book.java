@@ -72,9 +72,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return " title='" + title + '\'' +
-                ", author='" + authors.get(0).getNameAuthor() + '\'' +
-                ", language='" + language + '\'' +
-                ", downloads=" + downloads;
+        return " title = '" + title + '\'' +
+                ", author = '" + authors.get(0).getNameAuthor() + '\'' +
+                ", language = '" + language + '\'' +
+                ", downloads = " + downloads;
     }
 }

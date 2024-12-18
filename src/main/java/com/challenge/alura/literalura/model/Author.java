@@ -58,9 +58,9 @@ public class Author {
 
     @Override
     public String toString() {
-        return " nameAuthor=" + nameAuthor +
-                ", birthDate=" + birthDate +
-                ", deceaseDate=" + deceaseDate +
-                ", books=" + books.stream().map(Book::getTitle).toList();
+        return " nameAuthor = " + nameAuthor +
+                ", birthDate = " + birthDate +
+                ", deceaseDate = " + deceaseDate +
+                ", books = " + books.stream().map(Book::getTitle).toList();
     }
 }
