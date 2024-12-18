@@ -16,7 +16,7 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
     Book findExistBook(String book);
 
     @Query("SELECT b FROM Book b JOIN FETCH b.authors")
-    List<Book> findAll();
+    List<Book> findAllBooks();
 
     @Query("SELECT b FROM Book b JOIN FETCH b.authors a WHERE b.language = :language")
     List<Book> findByLanguage(String language);

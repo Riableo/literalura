@@ -182,7 +182,7 @@ public class Principal {
     }
 
     private void findBooks(){
-        List<Book> books = repository.findAll();
+        List<Book> books = repository.findAllBooks();
 
         books.forEach(System.out::println);
     }
